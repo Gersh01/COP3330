@@ -1,4 +1,11 @@
+//Alexander Gershfeld
+//Unit 1 Homework 1
+//COP3330C
+//Hatim Boustique
+//8-29-2023
+
 import java.util.Scanner;
+
 public class Unit1_HW1 {
     public static void main(String[] args) {
         Scanner myScan = new Scanner (System.in);
