@@ -1,6 +1,6 @@
 # COP3330C
 
-### 1. [Assignment One](/src/Unit1_HW1.java)
+### 1. [Assignment One](/COP3330/HW1.java)
 
 ---
 
