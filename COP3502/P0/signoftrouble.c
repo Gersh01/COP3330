@@ -16,7 +16,7 @@ int main() {
 	int buy = 0;
 
 	//counts the frequency of each letter in the first input
-	for(int i = 0; i < firstInputLen; i++) {
+	for(int i = 0; i < firstInputLen + 1; i++) {
 		//65 is the ascii for space, just to make sure that the for loop isnt counting the space
 		if(('A' - firstInput[i]) == 65) {
 			continue;
@@ -27,7 +27,7 @@ int main() {
 	}
 
 	// using the values stored, decides whether a letter should be bought or used for new word
-	for(int i = 0; i < secondInputLen; i++) {
+	for(int i = 0; i < secondInputLen + 1; i++) {
 		if(freq[secondInput[i] - 'A'] == 0) { 
 			buy++; //tracks the amount of letters needed for new input
 		}
