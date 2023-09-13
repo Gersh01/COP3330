@@ -57,7 +57,10 @@ int main() {
     //sentinel driven loop
     while (onSwitch) {
         int result; //variable that tracks success or failure with adding orders
-        fgets(input, MAXLEN + 10, stdin);
+        if(fgets(input, MAXLEN + 10, stdin) == NULL) {
+            printf("Input not receieved. Bye!\n");
+            return 0;
+        }
         input[strcspn(input, "\n")] = 0; //gets rid of return value in input
         option = strtok(input, " "); //breaks down first word; used to direct the loop
 
@@ -79,6 +82,7 @@ int main() {
             result = add_order(regal[tmpRow], tmpOrder); //all changes in this function will be applied to the row of user choice
             if (result == 0) {
                 printf("FAILURE\n");
+                free_order(tmpOrder); //frees order if theres conflict, no need for the order
             }
             else if (result == 1) {
                 printf("SUCCESS\n");
@@ -102,7 +106,6 @@ int main() {
             //passes the rows of the main double pointer as well as its constituents to be freed
             for (int i = 0; i < MAXROWS + 1; i++) {
                 free_row(regal[i]);
-                free(regal[i]);
             }
 
         }
@@ -126,10 +129,6 @@ theaterrow* make_empty_row() {
     tmp->cur_size = 0;
     tmp->max_size = INITSIZE;
     tmp->list_orders = (order**)calloc((tmp->max_size), sizeof(order*));
-
-    for (int i = 0; i < tmp->max_size; i++) {
-        tmp->list_orders[i] = (order*)malloc(sizeof(order));
-    }
 
     return tmp;
 }
@@ -170,11 +169,6 @@ int add_order(theaterrow* this_row, order* this_order) {
         this_row->max_size = newSize;
 
         this_row->list_orders = (order**)realloc(this_row->list_orders, newSize * sizeof(order*)); //realloc
-
-        //allocate the new orders up to the new max size
-        for (int i = this_row->cur_size; i < this_row->max_size; i++) {
-            this_row->list_orders[i] = (order*)malloc(sizeof(order));
-        }
     }
 
     //Order can be added to row
@@ -227,10 +221,7 @@ void free_row(theaterrow* this_row) {
     for (int i = 0; i < this_row->cur_size; i++) {
         free_order(this_row->list_orders[i]);
     }
-    //empty orders in a given row are also freed
-    for (int j = this_row->cur_size; j < this_row->max_size; j++) {
-        free(this_row->list_orders[j]);
-    }
     
     free(this_row->list_orders);
+    free(this_row);
 }
