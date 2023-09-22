@@ -1,3 +1,9 @@
+//Program Assignment 2 - Movie Line
+//Alexander Gershfeld
+//Arup Guha
+//COP3502
+//9-25-2023
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -21,6 +27,7 @@ typedef struct q {
     customerNode* front;
     customerNode* back;
     int size;
+    int numElements;
 } q;
 
 //Adds the newly made customer into a linked list
@@ -59,7 +66,6 @@ int main() {
         }
 
         //Calculates the queue number based on the first character of their name
-        tmpCustomer->lineNum = queueNum(allQueues, tmpCustomer);
 
         
         customerList = insertToFront(customerList, tmpCustomer);
@@ -86,6 +92,9 @@ customerInfo* createCustomer(char* newName, int newTickets, int newArrTime) {
     //assign number of tickets and arrival time
     tmp->numOfTickets = newTickets;
     tmp->arrivalTime = newArrTime;
+    
+    //calculate the queue flag for each customer
+    tmp->lineNum = (tmp->name[0] - 'A') % 13; 
 
     return tmp;
 }
@@ -104,24 +113,21 @@ customerNode* insertToFront(customerNode* newNode, customerInfo* newCustomer) {
     return tmpNode;
 }
 int queueNum(q** queues, customerInfo* newCustomer) {
-    //calculate the assigned queue
-    int ret = 0;
-    int position = (newCustomer->name[0] - 'A') % 13; 
-    if(queues == NULL)
-        return ret;
-    else if(position != 0)
-        ret = position;
-    
-    //rule for when mod is zero -- possibly move into its own function
-    else if(position == 0) {
-        for(int i = 0; i < QUEUESIZE; i++) 
-            if(queues[i]->size != 0)
-                for(int j = 1; j < QUEUESIZE; j++) 
-                    if(queues[i]->size > queues[j]->size) ret = j;
-    }
 
-    return ret;
 }
-q* createQ(int lineNo) {
 
+q* createQ(int lineNo) {
+    return NULL;
+}
+void enqueue() {
+    return 0;
+}
+int dequeue() {
+    return 0;
+}
+int front() {
+    return 0;
+}
+int emptyQ() {
+    return 0;
 }
