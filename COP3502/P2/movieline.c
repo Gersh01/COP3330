@@ -33,23 +33,30 @@ typedef struct q {
 //Adds the newly made customer into a linked list
 customerNode* createNode(customerInfo* newCustomer);
 //Inserts new node to the front of the list
-customerNode* insertToFront(customerNode* newNode, customerInfo* newCustomer);
+customerNode* insertToBack(customerNode* newNode, customerInfo* newCustomer);
 //Creates a new customer, populating the struct with input values
 customerInfo* createCustomer(char* newName, int newTickets, int newArrTime);
 //Calculates the queue number for each customer
 int queueNum(q** queues, customerInfo* newCustomer);
+//Compares queues to find the smallest one
+int smallestQ(q** queues, q* singleQ);
 //Creates the memory for the queue
 q* createQ(int lineNo);
+
+void enqueue(q* singleQ, customerInfo* newCustomer);
+
+int emptyQ(q* queue);
+
+int totalQ;
 
 int main() {
     
     customerInfo* tmpCustomer = NULL;
-    customerNode* customerList = NULL;
     q** allQueues = (q**)calloc(QUEUESIZE, sizeof(q*));
 
     char tmpName[MAXCHAR];
     int custAmt, booths;
-    int tmpTickets, tmpLineNum, tmpArrTime;
+    int tmpTickets, tmpLineNum, tmpArrTime, tmpQNum;
 
     scanf("%d %d", &custAmt, &booths); //input the amount of customers and functioning booths
     
@@ -65,15 +72,19 @@ int main() {
             return 0;
         }
 
-        //Calculates the queue number based on the first character of their name
+        //assigns the Queue number to the temporary customer at the time
+        tmpQNum = queueNum(allQueues, tmpCustomer);
+
+        //if the queue does not exist make it
+        if(allQueues[tmpQNum] == 0) allQueues[tmpQNum] = createQ(tmpQNum);
+
+        //add the temporary customer to the assigned queue
+        enqueue(allQueues[tmpQNum], tmpCustomer); 
 
         
-        customerList = insertToFront(customerList, tmpCustomer);
 
         custAmt--;
     }
-    
-
 
     free(tmpCustomer->name);
     free(tmpCustomer);
@@ -106,28 +117,62 @@ customerNode* createNode(customerInfo* newCustomer) {
 
     return tmp;
 }
-customerNode* insertToFront(customerNode* newNode, customerInfo* newCustomer) {
+customerNode* insertToBack(customerNode* newNode, customerInfo* newCustomer) {
     customerNode* tmpNode = createNode(newCustomer);
-    tmpNode->nextNode = newNode;
+    newNode->nextNode = tmpNode;
 
     return tmpNode;
 }
-int queueNum(q** queues, customerInfo* newCustomer) {
-
-}
-
 q* createQ(int lineNo) {
-    return NULL;
+    q* tmp = (q*)malloc(sizeof(q));
+    tmp->front = NULL;
+    tmp->back = NULL;
+    tmp->size = 0;
+    tmp->numElements = 0;
+
+    totalQ++;
+    return tmp;
 }
-void enqueue() {
+int queueNum(q** queues, customerInfo* newCustomer) {
+    int retVal = newCustomer->lineNum;
+
+    if(retVal != 0) return retVal;
+    if(totalQ == 0) return 0;
+    for(int i = 0; i < QUEUESIZE; i++) {
+        if(emptyQ(queues[i]) == 0) continue;
+        if(smallestQ(queues, queues[i]) == 1) return i;
+    }
+
+    return retVal;
+}
+int smallestQ(q** queues, q* singleQ) {
+    int count = 0;
+
+    for(int j = 0; j < QUEUESIZE; j++) {
+        if(emptyQ(queues[j]) == 0) continue;
+        if(singleQ->size <= queues[j]->size) count++;
+        if(count == totalQ) return 1;
+    }
     return 0;
+}
+int emptyQ(q* queue) {
+    if((queue == 0) || (queue->size == 0)) return 1;
+    return 0;
+}
+
+void enqueue(q* singleQ, customerInfo* newCustomer) {
+    if(singleQ->size == 0) { 
+        singleQ->front = createNode(newCustomer);
+        singleQ->back = singleQ->front;
+    }
+    else singleQ->back = insertToBack(singleQ->back, newCustomer);
+    
+    singleQ->size++;
+    singleQ->numElements++;    
 }
 int dequeue() {
     return 0;
 }
 int front() {
-    return 0;
-}
-int emptyQ() {
     return 0;
 }
