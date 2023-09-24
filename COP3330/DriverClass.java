@@ -1,4 +1,8 @@
-//
+//Alexander Gershfeld and Gabriel [insert last name]
+//Unit 4 Homework 2
+//COP3330C
+//Hatim Boustique
+//9-24-2023
 
 import java.util.ArrayList;
 
