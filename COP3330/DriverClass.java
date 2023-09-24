@@ -101,30 +101,58 @@ class Company {
     //all companies share the same companyTaxId and that may change
     //Add Setter and Getter for the companyName
     //No need to add a Setter and Getter for employeeList
-    public Company() {
-        employeeList = new ArrayList<>();
-        companyName = "People's Place";
-        companyTaxId = "v1rtua7C0mpan1";
-    }
-    public boolean hire ( Employee employee ) {
-        //Add employee to employeeList
-        //Note well that we can't add an employee whose employeeNumber already
-        //assigned to another employee. In that case, this method returns false.
-        //This method returns true otherwise
-        return true;
-    }
-    public void printCompanyInfo() {
-        //This method prints the company name, the tax id and the current number of employees
-        //You may choose to print that any way you like!
-    }
-    public void printEmployees() {
-        //This method prints all employees (One employee per line)
-        //Note that you already have toString in Employee
-    }
-    public int countEmployees( double maxSalary ) {
-        //This method returns the number of employees paid less than maxSalary
-        return 0;
-    }
+    public String getCompanyName() {
+			return companyName;
+		}
+		public void setCompanyName(String companyName) {
+			this.companyName = companyName;
+		}
+		public static String getCompanyTaxId() {
+			return companyTaxId;
+		}
+		public static void setCompanyTaxId(String companyTaxId) {
+			Company.companyTaxId = companyTaxId;
+		}
+	    
+	    public Company() {
+	    	employeeList = new ArrayList<>();
+	        companyName = "People's Place";
+	        companyTaxId = "v1rtua7C0mpan1";
+	    }
+	    public boolean hire ( Employee employee ) {
+	    	int index;
+	    	for (index = 0; index < employeeList.size(); index++) {
+	    		if ((employee.getEmployeeNumber()).compareToIgnoreCase((employeeList.get(index)).getEmployeeNumber()) != 0){
+	    			return false;
+	    		}
+	    	}
+	    	employeeList.add(employee);
+	    	return true;
+	    
+	        //Add employee to employeeList
+	        //Note well that we can't add an employee whose employeeNumber already
+	        //assigned to another employee. In that case, this method returns false.
+	        //This method returns true otherwise
+
+	    }
+	    public void printCompanyInfo() {
+	        //This method prints the company name, the tax id and the current number of employees
+	        System.out.println("Company Name: " + companyName + " | TaxID: " + companyTaxId + " | Number of Employees:" + employeeList.size());
+	    }
+	    public void printEmployees() {
+            int index;
+	    	for (index = 0; index < employeeList.size(); index++) {
+	    	    toString();
+	    	}
+	        //Note that you already have toString in Employee
+	    }
+	    public int countEmployees( double maxSalary ) {
+	        int index;
+	    	for (index = 0; index < employeeList.size(); index++) {
+	    	    if (maxSalary > employeeList.get(index))
+	    	}
+	        return 0;
+	    }
     public boolean SearchByName (String fullName ) {
         //This method returns true if fullName exists as an employee.
         //It returns false otherwise
