@@ -1,4 +1,4 @@
-//Alexander Gershfeld and Gabriel [insert last name]
+//Alexander Gershfeld and Gabriel Perez
 //Unit 4 Homework 2
 //COP3330C
 //Hatim Boustique
@@ -128,7 +128,8 @@ class Company {
 	    	}
 	    	employeeList.add(employee);
 	    	return true;
-	    
+	    //Just kind of assuming this works since i cant really test it
+		    
 	        //Add employee to employeeList
 	        //Note well that we can't add an employee whose employeeNumber already
 	        //assigned to another employee. In that case, this method returns false.
@@ -140,20 +141,28 @@ class Company {
 	        System.out.println("Company Name: " + companyName + " | TaxID: " + companyTaxId + " | Number of Employees:" + employeeList.size());
 	    }
 	    public void printEmployees() {
+		    //Not sure if we are supposed to like print out all of the employees contents or just the name
             int index;
 	    	for (index = 0; index < employeeList.size(); index++) {
-	    	    toString();
+	    	    toString().get(index);
 	    	}
 	        //Note that you already have toString in Employee
+		    
 	    }
 	    public int countEmployees( double maxSalary ) {
-	        int index;
+	        int index, count;
 	    	for (index = 0; index < employeeList.size(); index++) {
-	    	    if (maxSalary > employeeList.get(index))
+	    	    if (maxSalary > employeeList.get(index).getGrossPay()){
+			    count++;
 	    	}
-	        return 0;
+	        return count;
 	    }
     public boolean SearchByName (String fullName ) {
+	for (index = 0; index < employeeList.size(); index++) {
+		if (fullName.compareToIgnoreCase((employeeList.get(index)).getFullName()) == 0){
+	    		return true;
+	    	}
+	    }
         //This method returns true if fullName exists as an employee.
         //It returns false otherwise
         //this is a not a case-sensitive search.
@@ -165,6 +174,11 @@ class Company {
         //second last with the second and so on
     }
     public void deleteEmployeesBySalary (double targetSalary ) {
+	    for (index = 0; index < employeeList.size(); index++) {
+		if (targetSalary == employeeList.get(index).getGrossPay(){
+	    		employeeList.remove(index);
+	    	}
+	    }
         //This method deletes all employees who are paid targetSalary as a gross //salary
     }
     public void printCheck ( String employeeNumber) {
