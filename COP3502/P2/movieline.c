@@ -37,10 +37,11 @@ customerNode* insertToBack(customerNode* newNode, customerInfo* newCustomer);
 int queueNum(q** queues, customerInfo* newCustomer);
 int smallestQ(q** queues, q* singleQ);
 int emptyQ(q* queue); 
-customerInfo* peek(q* queue);
+customerNode* peek(q* queue);
 void enqueue(q* singleQ, customerInfo* newCustomer); 
-void boothAssignment(int booth, int maxQ, q** queues); 
-void checkoutBooth(int limit, q** queues); 
+int boothAssignment(int booth, int maxQ, q** queues); 
+void checkoutBooth(int booth, int numQ, int limit, q** queues); 
+q* getIndex(q** queues, int i);
 customerInfo* dequeue(q* queue); 
 int checkoutTime(customerInfo* newCustomer); 
 void freeCustomer(); 
@@ -84,18 +85,19 @@ int main() {
 
     //booth assignment time
     excessQueues = totalQ%booths;
+    int checkoutPerBooth;
     for(int i = 1; i <= booths; i++) {
         queuesPerBooth = totalQ/booths;     
         if(excessQueues != 0) {
             queuesPerBooth++;
             excessQueues--;
-            boothAssignment(i, queuesPerBooth, allQueues);
+            checkoutPerBooth = boothAssignment(i, queuesPerBooth, allQueues);
         }
-        else boothAssignment(i, queuesPerBooth, allQueues);
+        else checkoutPerBooth = boothAssignment(i, queuesPerBooth, allQueues);
 
-        printf("Booth %d\n", i);
-        checkoutBooth(queuesPerBooth, allQueues);
-        printf("\n");
+        printf("\nBooth %d\n", i);
+        checkoutBooth(i, queuesPerBooth, checkoutPerBooth, allQueues);
+        //printf("\n");
     }
 
     free(tmpCustomer->name);
@@ -146,17 +148,19 @@ customerNode* insertToBack(customerNode* newNode, customerInfo* newCustomer) {
     return tmpNode;
 }
 int queueNum(q** queues, customerInfo* newCustomer) {
-    int retVal = newCustomer->lineNum;
-
-    if(retVal != 0) return retVal - 1;
-    if(totalQ == 0) return 0;
+    int retVal = newCustomer->lineNum - 1;
+    if(newCustomer->lineNum != 0) return retVal;
+    if(totalQ == 0) {
+        newCustomer->lineNum++;
+        return 0;
+    }
     for(int i = 0; i < QUEUESIZE; i++) {
         if(emptyQ(queues[i]) == 1) continue;
-        if(smallestQ(queues, queues[i]) == 1) return i;
+        if(smallestQ(queues, queues[i]) == 1) {
+            newCustomer->lineNum = i+1;
+            return i;
+        }
     }
-
-    newCustomer->lineNum = retVal - 1;
-    return retVal - 1;
 }
 int smallestQ(q** queues, q* singleQ) {
     int count = 0;
@@ -172,8 +176,8 @@ int emptyQ(q* queue) {
     if((queue == 0) || (queue->size == 0)) return 1;
     return 0;
 }
-customerInfo* peek(q* queue) {
-    return queue->front->customer;
+customerNode* peek(q* queue) {
+    return queue->front;
 }
 void enqueue(q* singleQ, customerInfo* newCustomer) {
     if(singleQ->size == 0) { 
@@ -184,51 +188,69 @@ void enqueue(q* singleQ, customerInfo* newCustomer) {
     
     singleQ->size++;   
 }
-void boothAssignment(int booth, int maxQ, q** queues) {
+int boothAssignment(int booth, int maxQ, q** queues) {
+    int ret = 0;
     for(int i = 0; i < QUEUESIZE; i++) {
         if(emptyQ(queues[i]) == 1) continue;
         else if((maxQ != 0) && (queues[i]->boothNum == 0)) {
             queues[i]->boothNum = booth;
+            ret = queues[i]->size + ret;
             maxQ--;
         }
-    }   
+    }  
+    return ret; 
 }
-void checkoutBooth(int limit, q** queues) {
-    //sort among all queues in booth by arrival time
+void checkoutBooth(int booth, int numQ, int limit, q** queues) {
+    q** tmpQueues = (q**)calloc(numQ, sizeof(q*));
+    q* tmpQueue = NULL;
     customerInfo* tmpCust = NULL;
-    int count, index, time;
 
-    while(limit > 0) {
-        count = 0;
-        for(int i = 0; i < QUEUESIZE; i ++) {
-            if(emptyQ(queues[i]) == 1) continue;
-            for(int j = 0; j < QUEUESIZE; j++) {
-                if(emptyQ(queues[j]) == 1) continue;
-                if(peek(queues[i])->arrivalTime <= peek(queues[j])->arrivalTime) count++;
-            }
-            if(count == limit) {
-                index = i;
-                limit--;
+    int count, index, time = 0;
+
+    for(int i = 0; i < numQ; i++)
+        for(int j = 0; j < QUEUESIZE; j++)
+            if((emptyQ(queues[j]) == 0) && (queues[j]->boothNum == booth)) {
+                tmpQueues[i] = queues[j];
+                queues[j]->boothNum = 0;
                 break;
             }
+
+    while(limit > 0) {
+        tmpQueue = getIndex(tmpQueues, numQ);
+        tmpCust = dequeue(tmpQueue);
+
+        if(tmpQueue->front == 0) {
+            numQ--;
+            for(int i = 0; i < numQ; i++) {
+                tmpQueues[i] = tmpQueues[i+1];
+            }
+            
         }
-
-        tmpCust = dequeue(queues[index]);
-
-        time = checkoutTime(tmpCust);
-        printf("%s from line %d checks out at time %d\n", tmpCust->name, (tmpCust->lineNum + 1), time);
+        time = checkoutTime(tmpCust) + time;
+        printf("%s from line %d checks out at time %d\n", tmpCust->name, tmpCust->lineNum, time);
+        limit--;
     }
+    free(tmpQueues);
+}
+q* getIndex(q** queues, int i) {
+    int count = 0;
+    for(int j = 0; j < i; j++) 
+        for(int k = 0; k < i; k++) {
+            if((emptyQ(queues[j]) == 1 ) || (emptyQ(queues[k]) == 1)) continue;
+            if(peek(queues[j])->customer->arrivalTime <= peek(queues[k])->customer->arrivalTime) count++;
+            if(count == i) return queues[j];
+        }
 }
 customerInfo* dequeue(q* queue) {
     customerNode* tmpNode;
     customerInfo* tmpCust; 
 
-    tmpCust = peek(queue);
+    tmpCust = peek(queue)->customer;
     tmpNode = queue->front;
     queue->front = queue->front->nextNode;
 
     if(queue->front == NULL) {
-        queue->back == NULL;
+        queue->back == queue->front;
     }
 
     queue->size--;
