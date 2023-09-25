@@ -1,4 +1,4 @@
-//Alexander Gershfeld and Gabriel [insert last name]
+//Alexander Gershfeld and Gabriel Perez
 //Unit 4 Homework 2
 //COP3330C
 //Hatim Boustique
@@ -16,26 +16,31 @@ public class DriverClass {
         Employee e;
         e = new Employee(fullName, employeeNumber, payRate, hoursWorked);
         System.out.println(e); // To Test your toString method
-
-
         e.printCheck(); // This prints the check of Erika T. Jones
-        /*
+
         Company company = new Company();
         company.hire ( new Employee ("Saeed Happy", "sh895" , 2 , 200) );
         company.hire (e);
         company.printCompanyInfo();
         company.hire( new Employee("Enrico Torres" , "et897" , 3 , 150) );
+        company.printEmployees();
+        System.out.println(company.countEmployees(10000));
 
         //You may add as many employees to company as you want.
         //The TAs will add their own employees
         //Make sure that each employee of company has a unique employeeNumber
+
         company.printCheck("ab784");
-        company.deleteEmployeesBySalary(256.36);
+        company.deleteEmployeesBySalary(378.00);
         company.reverseEmployees();
+        company.printEmployees();
+
+
         System.out.println( company.SearchByName("WaLiD WiLLiAms") );
+        System.out.println(company.countEmployees(10000));
         company.printEmployees();
         System.out.println("Bye!");
-        */
+
     }
 }
 //____________________________
@@ -67,17 +72,23 @@ class Employee {
     public double getPayRate() {return payRate;}
     public double getHoursWorked() {return hoursWorked;}
 
+    //Whenever an employee's address is called, return this string; otherwise if called do the same
     @Override
     public String toString() {
         return "[" + employeeNumber + "/" + fullName + ", " + hoursWorked + " Hours @ " + payRate + " per hour]";
     }
-    private double grossPay() {
+
+    //Returns the product of payRate and hoursWorked
+    public double grossPay() {
         return (payRate * hoursWorked);
     }
+
+    //Returns the result of grossPay and calculates the net pay at a 6% tax
     private double netPay() {
         return grossPay() * .94;
     }
 
+    //Prints the check of specified employee
     public void printCheck() {
         System.out.println("---------------------------------------------------------------------------");
         System.out.println("\t\tEmployee's name:\t\t" + getFullName());
@@ -97,51 +108,90 @@ class Company {
     private String companyName;
     private static String companyTaxId;
 
-    //Add static Setters and Getters for companyTaxId. We assume that
-    //all companies share the same companyTaxId and that may change
-    //Add Setter and Getter for the companyName
-    //No need to add a Setter and Getter for employeeList
+    //Initializes the company class
     public Company() {
         employeeList = new ArrayList<>();
         companyName = "People's Place";
         companyTaxId = "v1rtua7C0mpan1";
     }
+
+    //Setter for the company fields
+    public void setCompanyName(String companyName) {this.companyName = companyName;}
+    public static void setCompanyTaxId(String companyTaxId) {Company.companyTaxId = companyTaxId;}
+
+    //Getters to return the company fields
+    public String getCompanyName() {return companyName;}
+    public static String getCompanyTaxId() {return companyTaxId;}
+
+    //Searches to see if the employee number of the new employee conflicts with others,
+    //if not adds to the company array
     public boolean hire ( Employee employee ) {
-        //Add employee to employeeList
-        //Note well that we can't add an employee whose employeeNumber already
-        //assigned to another employee. In that case, this method returns false.
-        //This method returns true otherwise
+        for (Employee value : employeeList) {
+            if (employee.getEmployeeNumber().compareTo(value.getEmployeeNumber()) == 0)
+                return false;
+        }
+        employeeList.add(employee);
         return true;
     }
+
+    //This method prints the company name, the tax id and the current number of employees
     public void printCompanyInfo() {
-        //This method prints the company name, the tax id and the current number of employees
-        //You may choose to print that any way you like!
+        System.out.println("Company Name: " + getCompanyName() + " | TaxID: " + getCompanyTaxId() + " | Number of Employees:" + employeeList.size());
     }
+
+    //Prints out the toString of each employee in the list
     public void printEmployees() {
-        //This method prints all employees (One employee per line)
-        //Note that you already have toString in Employee
+        int index;
+        for (index = 0; index < employeeList.size(); index++) {
+            System.out.println(employeeList.get(index).toString());
+        }
     }
+
+    //Counts how many employees earn less than the maxSalary in the entire array
     public int countEmployees( double maxSalary ) {
-        //This method returns the number of employees paid less than maxSalary
-        return 0;
+        int count = 0;
+        for (Employee employee : employeeList) {
+            if (maxSalary > employee.grossPay()) {
+                count++;
+            }
+
+        }
+        return count;
     }
+
+    //Returns true if the array contains the target name; false if there is not a matching name
     public boolean SearchByName (String fullName ) {
-        //This method returns true if fullName exists as an employee.
-        //It returns false otherwise
-        //this is a not a case-sensitive search.
+        for (Employee employee : employeeList)
+            if (fullName.compareToIgnoreCase(employee.getFullName()) == 0)
+                return true;
         return false;
     }
+
+    //Creates a temporary array that holds the reverse of the company array, replaces the original with reversed
     public void reverseEmployees () {
-        //This method reverses the order in which the employees were added to
-        //the list. The last employee is swapped with the first employee, the
-        //second last with the second and so on
+        ArrayList<Employee> tmpArr = new ArrayList<>();
+        for(int j = employeeList.size() - 1; j > -1; j--) {
+            tmpArr.add(employeeList.get(j));
+        }
+        employeeList = tmpArr;
     }
+
+    //Finds any entries in array that match the targetSalary and removes from the array
     public void deleteEmployeesBySalary (double targetSalary ) {
-        //This method deletes all employees who are paid targetSalary as a gross //salary
+        for (int index = 0; index < employeeList.size(); index++)
+            if (targetSalary == employeeList.get(index).grossPay())
+                employeeList.remove(index);
     }
+
+    //Matches employeeNumber to the fields in each entry,
+    //if there's a match, this method prints the employees check
     public void printCheck ( String employeeNumber) {
-        //This method prints the check of the employee whose employee number is
-        //employeeNumber. It prints NO SUCH EMPLOYEE EXISTS if employeeNumber is
-        //not a registered employee number.
+        for (Employee employee : employeeList) {
+            if (employeeNumber.compareToIgnoreCase(employee.getEmployeeNumber()) == 0) {
+                employee.printCheck();
+                return;
+            }
+        }
+        System.out.println("NO SUCH EMPLOYEE EXISTS"); //No matching employee
     }
 }
