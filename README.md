@@ -13,6 +13,7 @@ All of my completed assignments for my classes during the fall 2023 term.
 ## Lecture
 ### 1. [Assignment One](/COP3502/P0/signoftrouble.c)
 ### 2. [Assignment Two](/COP3502/P1/assignedseating.c)
+### 3. [Assignment Three](/COP3502/P2/movieline.c)
 <br>
 
 ## Recitation
