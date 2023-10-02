@@ -7,11 +7,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+#define N 900
+
 int** intializeGridRec(int** arr, int islands, int index);
 void scanInputRec(int** islands, int iteration);
-int travelIslandsRec(int** islands, int* traveled, int index);
-int checkIslandRec(int* island, int index);
-int checkTraveledRec(int* travelArr, int index);
+int travelIslandsRec(int** islands, int* traveled, int index, int off);
+int checkIslandRec(int* island, int index, int off);
+int checkTraveledRec(int* travelArr, int index, int count, int maxIsland);
 void freeGridRec(int** grid, int index);
 
 int garbage;
@@ -24,24 +26,26 @@ int main() {
 
     int** grid; 
     grid = intializeGridRec(grid, islands, i);
-    int* traveled = (int*)calloc(islands, sizeof(int));
-    traveled[0] = 1;
+    int* traveled = (int*)calloc(N+1, sizeof(int));
+    
 
     scanInputRec(grid, bridges);
 
-    if(travelIslandsRec(grid, traveled, 1) == 1) printf("YES\n");
-    else printf("NO\n");
+    if(travelIslandsRec(grid, traveled, 0, 0) == 1) {
+        if(checkTraveledRec(traveled, i, i, islands)) printf("YES\n");
+        else printf("NO\n");
+    }
 
     free(traveled);
-    freeGridRec(grid, islands-1);
+    freeGridRec(grid, N-1);
     free(grid);
     return 0;
 }
 int** intializeGridRec(int** arr, int islands, int index) {
-    if(index == 0) arr = (int**)calloc(islands, sizeof(int*));
-    if(index >= islands) return arr;
+    if(index == 0) arr = (int**)calloc(N, sizeof(int*));
+    if(index == N) return arr;
 
-    arr[index] = (int*)calloc(islands, sizeof(int));
+    arr[index] = (int*)calloc(N, sizeof(int));
     arr[index][index] = -1;
 
     intializeGridRec(arr, islands, index+1);
@@ -56,31 +60,37 @@ void scanInputRec(int** islands, int iteration) {
 
     scanInputRec(islands, iteration - 1);
 }
-int travelIslandsRec(int** islands, int* traveled, int index) {
-    if(checkTraveledRec(traveled, 0)) return 1;
+int travelIslandsRec(int** islands, int* traveled, int index, int off) {
 
-    traveled[index] = checkIslandRec(islands[index], 0);
+    if(index == N) return 1;
 
-    if(traveled[index] == 0) return 0;
+    //if(islands[0][index] == 1) traveled[0] = 1;
 
-    return travelIslandsRec(islands, traveled, index+1);
-}
-int checkIslandRec(int* island, int index) {
-    if(island[index] == -1) return 0;
-
-    if(island[index] == 1) {
-        return 1;
+    if(checkIslandRec(islands[index], 0, off)) {
+        traveled[index] = 1;
+        return travelIslandsRec(islands, traveled, index+1, 1);
     }
-    if(island[index] == 0) return checkIslandRec(island, index+1);
-    
-    
+    //traveled[index] = checkIslandRec(islands[index], 0, off);
+    return travelIslandsRec(islands, traveled, index+1, off);
     
 }
-int checkTraveledRec(int* travelArr, int index) {
-    if(travelArr[index] == 1) return checkTraveledRec(travelArr, index+1);
-    if(travelArr[index] == 0) return 0;
+int checkIslandRec(int* island, int index, int off) {
+    if(off == 1) {
+        if(island[index] == -1) return 0;
+    }
+   
+    if(index == N) return 0;
 
-    return 1;
+    if(island[index] == 1) return 1;
+    
+    if(island[index] == 0) return checkIslandRec(island, index+1, off);
+}
+int checkTraveledRec(int* travelArr, int index, int count, int maxIsland) {
+    if(count == maxIsland) return 1;
+    if(index == N) return 0;
+
+    if(travelArr[index] == 1) return checkTraveledRec(travelArr, index+1, count+1, maxIsland);
+    if(travelArr[index] == 0) return checkTraveledRec(travelArr, index+1, count, maxIsland);
 }  
 void freeGridRec(int** grid, int index) {
     if(index == -1) return;
