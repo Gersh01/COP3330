@@ -32,8 +32,8 @@ int main() {
     scanInputRec(grid, bridges);
 
     if(travelIslandsRec(grid, traveled, 0, 0) == 1) {
-        if(checkTraveledRec(traveled, i, i, islands)) printf("YES\n");
-        else printf("NO\n");
+        if(checkTraveledRec(traveled, i, i, islands)) printf("YES");
+        else printf("NO");
     }
 
     free(traveled);
