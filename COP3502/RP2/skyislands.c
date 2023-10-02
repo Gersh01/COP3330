@@ -10,7 +10,7 @@
 #define N 900
 
 int** intializeGridRec(int** arr, int islands, int index);
-void scanInputRec(int** islands, int iteration);
+int scanInputRec(int** islands, int iteration);
 int travelIslandsRec(int** islands, int* traveled, int index, int off);
 int checkIslandRec(int* island, int index, int off);
 int checkTraveledRec(int* travelArr, int index, int count, int maxIsland);
@@ -22,14 +22,14 @@ int main() {
     int islands, bridges;
     int i = 0;
 
-    garbage = scanf("%d %d", &islands, &bridges);
+    if(scanf("%d %d", &islands, &bridges) == 0) return 0;
 
     int** grid; 
     grid = intializeGridRec(grid, islands, i);
     int* traveled = (int*)calloc(N+1, sizeof(int));
     
 
-    scanInputRec(grid, bridges);
+    if(scanInputRec(grid, bridges) == 0) return 0;
 
     if(travelIslandsRec(grid, traveled, 0, 0) == 1) {
         if(checkTraveledRec(traveled, i, i, islands)) printf("YES");
@@ -50,11 +50,11 @@ int** intializeGridRec(int** arr, int islands, int index) {
 
     intializeGridRec(arr, islands, index+1);
 }
-void scanInputRec(int** islands, int iteration) {
+int scanInputRec(int** islands, int iteration) {
     int isl1, isl2;
-    if(iteration < 1) return;
+    if(iteration < 1) return 1;
 
-    garbage = scanf("%d %d", &isl1, &isl2);
+    if(scanf("%d %d", &isl1, &isl2) == 0) return 0;
     islands[isl1 - 1][isl2 - 1] = 1;
     islands[isl2 - 1][isl1 - 1] = 1;
 
