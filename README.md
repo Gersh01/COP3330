@@ -14,7 +14,10 @@ All of my completed assignments for my classes during the fall 2023 term.
 ### 1. [Assignment One](/COP3502/P0/signoftrouble.c)
 ### 2. [Assignment Two](/COP3502/P1/assignedseating.c)
 ### 3. [Assignment Three](/COP3502/P2/movieline.c)
+### 4a. [Assignment Four](/COP3502/P3/wheretosita.c)
+### 4b. [Assignment Four](/COP3502/P3/wheretositb.c)
 <br>
 
 ## Recitation
 ### 1. [Recitation Assignment One](/COP3502/RP1/mirror.c)
+### 2. [Recitation Assignment Two](/COP3502/RP2/skyislands.c)
