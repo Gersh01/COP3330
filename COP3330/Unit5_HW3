@@ -1,0 +1,32 @@
+//Unit5_HW3
+//Alexander Gershfeld, Tyler Huynh, Gabriel Perez
+//Hatim Boustique
+//COP3330
+//October 15, 2023
+
+public class Driver {
+    public static void main(String[] args) {
+        //Instantiate the class BookList here...
+    }
+}
+//_________________________________
+abstract class Book {
+    //code of the abstract class Book
+    //You may add an abstract method if you see fit...
+}
+//_________________________________
+class BookstoreBook extends Book {
+    //fields and specific code to the BookstoreBook class goes here
+}
+//_________________________________
+class LibraryBook extends Book {
+    //fields and specific code to the LibraryBook class goes here
+}
+//_________________________________
+class BookList {
+    private Book[] list;
+    public BookList() {
+        list = new Book[100];
+        //Additional code goes here if needed...
+    }
+}
