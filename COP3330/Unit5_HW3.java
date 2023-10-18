@@ -67,7 +67,7 @@ public class Driver {
                 //Takes in more information for bookstore books-----------------------------------
                 if(bookType.compareToIgnoreCase("bb") == 0) {
                     double percent; //pass this through
-                    double price; //pass this through
+                    double price = 0; //pass this through
 
                     String sale, percentage;
                     String [] parsePercent; //gets rid of the percent symbol
@@ -78,7 +78,7 @@ public class Driver {
                     try {
                         price = Double.parseDouble(input.nextLine());
                     }
-                    catch(NumberFormatException e) {
+                    catch (NumberFormatException e) {
                         System.out.println("Please enter a valid price: ");
                         price = Double.parseDouble(input.nextLine());
                     }
@@ -146,7 +146,7 @@ abstract class Book {
     private String author;
     private String title;
     private String isbn;
-    
+
     //get and set author
     public String getAuthor() {
         return author.toUpperCase();
@@ -154,7 +154,7 @@ abstract class Book {
     public void setAuthor(String author) {
         this.author = author;
     }
-    
+
     //get and set title
     public String getTitle() {
         return title.toUpperCase();
@@ -162,7 +162,7 @@ abstract class Book {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     //get and set isbn
     public String getIsbn() {
         return isbn;
@@ -192,7 +192,7 @@ abstract class Book {
         this.title = title;
         this.isbn = isbn;
     }
-    
+
     //to String but is overridden
     public String toString() {
         return "[" + "-" + getIsbn() + getTitle() + " by " + getAuthor() + "]";
@@ -264,7 +264,7 @@ class BookstoreBook extends Book {
 
     @Override
     public String toString () {
-        return "[" + getIsbn() + "-" + getTitle() + " by " + getAuthor() + ", $" + listPrice +
+        return "[" + getIsbn() + "-" + getTitle() + " by " + getAuthor() + ", $" + String.format("%.2f", getPrice()) +
                 " listed for $" + String.format("%.2f", getPriceReduction()) + "]";
     }
 }
@@ -272,7 +272,7 @@ class BookstoreBook extends Book {
 class LibraryBook extends Book {
     //random number variable
     Random randInt = new Random();
-    
+
     //callNum itself
     private String callNum;
 
@@ -299,7 +299,7 @@ class LibraryBook extends Book {
         else
             this.callNum = "%d.%s.%s".formatted(getFloorNumber(), getFirstThreeChar(), getCallIsbn());
     }
-    
+
     //getters for constituents
     public int getFloorNumber() {
         return floorNumber;
@@ -310,7 +310,7 @@ class LibraryBook extends Book {
     public char getCallIsbn() {
         return callIsbn;
     }
-    
+
     //getter for the callNum
     public String getCallNum() {
         return callNum;
@@ -371,7 +371,7 @@ class BookList {
             System.out.println("Sorry, no more books can be added to your list.");
         }
     }
-    
+
     //returns the Book object at the index of list that matches the parameter
     public Book getBook(String isbnStr) {
         for(int i = 0; i < 100; i++) {
