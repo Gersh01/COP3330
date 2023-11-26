@@ -109,11 +109,12 @@ public class FinalProject {
                         }
                     }
 
-                    for(int i = 0; i < 100; i++)
+                    for(int i = 0; i < 100; i++) {
                         if(pList[i] != null) {
                             pList[i] = new Faculty(fullName, id, rank, department);
                             pList[i].print();
                         }
+                    }
 
                     break;
                 case 2:
