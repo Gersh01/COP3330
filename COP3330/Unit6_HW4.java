@@ -1,3 +1,8 @@
+//Unit6_HW4
+//Alexander Gershfeld
+//Hatim Boustique
+//COP3330
+
 import java.util.Scanner;
 
 public class DriverClass {
