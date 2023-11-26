@@ -494,7 +494,13 @@ class Staff extends Employee {
     public void print() {
         System.out.println("---------------------------------------------------------------------------");
         System.out.println(getName() + "\t" + getId());
-        System.out.println(getDepartment() + ", " + getStatus());
+        if(getStatus().compareToIgnoreCase("f") == 0) {
+        	System.out.println(getDepartment() + ", Full Time");
+        }
+        
+        else if(getStatus().compareToIgnoreCase("p") == 0) {
+        	System.out.println(getDepartment() + ", Part Time");
+        }
         System.out.println("---------------------------------------------------------------------------");
     }
 }
