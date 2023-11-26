@@ -17,6 +17,7 @@ All of my completed assignments for my classes during the fall 2023 term.
 ### 3. [Assignment Three](/COP3502/P2/movieline.c)
 ### 4a. [Assignment Four](/COP3502/P3/wheretosita.c)
 ### 4b. [Assignment Four](/COP3502/P3/wheretositb.c)
+### 6. [Assignment Six](/COP3502/p5/loyalty.c)
 <br>
 
 ## Recitation
