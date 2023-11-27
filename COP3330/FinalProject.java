@@ -48,6 +48,8 @@ public class FinalProject {
                             inputID(input, pList),
                             inputDepartment(input),
                             inputRank(input)
+         
+                            
                         )
                     );
                     System.out.println("\nFaculty member added!");
@@ -63,6 +65,7 @@ public class FinalProject {
                             inputCrdHrs(input)
                         )
                     );
+                    
                     System.out.println("\nStudent member added!");
                     break;
                 case 3:
@@ -185,7 +188,7 @@ public class FinalProject {
                 System.out.println(id + " is already assigned - try again");
                 continue;
             } catch (Exception e) {
-                System.out.println(id + " is an invalid input - try again");
+                System.out.println("Invalid ID format. Must be LetterLetterDigitDigitDigitDigit");
                 continue;
             }
         }
@@ -228,7 +231,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch (Exception e) {
-                System.out.println(rank + " is an invalid input - try again");
+                System.out.println('"' + rank + '"' + " is invalid");
                 continue;
             }
         }
@@ -260,14 +263,16 @@ public class FinalProject {
             try {
                 System.out.print("Enter GPA between 0.00 - 4.00: ");
                 gpa = input.nextDouble();
-                input.nextLine();
-
                 if(gpa < 0 || gpa > 4.00)
                     throw new Exception();
-                else break;
+                else
+                	break;
             } catch(Exception e) {
                 System.out.println(gpa + " is an invalid input - try again");
                 continue;
+            }
+            finally {
+            	input.nextLine();
             }
         }
         return gpa;
@@ -278,13 +283,15 @@ public class FinalProject {
             try {
                 System.out.print("Enter credit hours taken - must be greater than 0: ");
                 creditHours = input.nextInt();
-                input.nextLine();
 
                 if(creditHours < 0) throw new Exception();
                 else break;
             } catch(Exception e) {
                 System.out.println(creditHours + " is an invalid input - try again");
                 continue;
+            }
+            finally {
+            	input.nextLine();
             }
         }
         return creditHours;
@@ -324,13 +331,16 @@ public class FinalProject {
                 try {
                     System.out.print("Would like to sort your students by descending gpa or name (1 for gpa, 2 for name): ");
                     sortOption = input.nextInt();
-                    input.nextLine();
+                    
                     if (sortOption == 1 || sortOption == 2)
                         break;
                     else throw new Exception();
                 } catch (Exception e) {
                     System.out.println(sortOption + " is an invalid input - try again");
                     continue;
+                }
+                finally {
+                	input.nextLine();
                 }
             }
 
