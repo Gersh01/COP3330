@@ -333,13 +333,16 @@ public class FinalProject {
                 try {
                     System.out.print("Would like to sort your students by descending gpa or name (1 for gpa, 2 for name): ");
                     sortOption = input.nextInt();
-                    input.nextLine();
+
                     if (sortOption == 1 || sortOption == 2)
                         break;
                     else throw new Exception();
                 } catch (Exception e) {
-                    System.out.println(sortOption + " is an invalid input - try again");
+                    System.out.println("You have entered an invalid input - try again");
                     continue;
+                }
+                finally {
+                    input.nextLine();
                 }
             }
 
