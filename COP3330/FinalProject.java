@@ -46,10 +46,8 @@ public class FinalProject {
                         (
                             inputName(input),
                             inputID(input, pList),
-                            inputDepartment(input),
-                            inputRank(input)
-         
-                            
+                            inputRank(input),
+                            inputDepartment(input)
                         )
                     );
                     System.out.println("\nFaculty member added!");
@@ -65,7 +63,6 @@ public class FinalProject {
                             inputCrdHrs(input)
                         )
                     );
-                    
                     System.out.println("\nStudent member added!");
                     break;
                 case 3:
@@ -188,7 +185,7 @@ public class FinalProject {
                 System.out.println(id + " is already assigned - try again");
                 continue;
             } catch (Exception e) {
-                System.out.println("Invalid ID format. Must be LetterLetterDigitDigitDigitDigit");
+                System.out.println(id + " is an invalid input - try again");
                 continue;
             }
         }
@@ -231,7 +228,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch (Exception e) {
-                System.out.println('"' + rank + '"' + " is invalid");
+                System.out.println(rank + " is an invalid input - try again");
                 continue;
             }
         }
@@ -266,13 +263,13 @@ public class FinalProject {
                 if(gpa < 0 || gpa > 4.00)
                     throw new Exception();
                 else
-                	break;
+                    break;
             } catch(Exception e) {
-                System.out.println(gpa + " is an invalid input - try again");
+                System.out.println("You have entered an invalid input - try again");
                 continue;
             }
             finally {
-            	input.nextLine();
+                input.nextLine();
             }
         }
         return gpa;
@@ -287,11 +284,11 @@ public class FinalProject {
                 if(creditHours < 0) throw new Exception();
                 else break;
             } catch(Exception e) {
-                System.out.println(creditHours + " is an invalid input - try again");
+                System.out.println("You have entered an invalid input - try again");
                 continue;
             }
             finally {
-            	input.nextLine();
+                input.nextLine();
             }
         }
         return creditHours;
@@ -331,16 +328,13 @@ public class FinalProject {
                 try {
                     System.out.print("Would like to sort your students by descending gpa or name (1 for gpa, 2 for name): ");
                     sortOption = input.nextInt();
-                    
+                    input.nextLine();
                     if (sortOption == 1 || sortOption == 2)
                         break;
                     else throw new Exception();
                 } catch (Exception e) {
                     System.out.println(sortOption + " is an invalid input - try again");
                     continue;
-                }
-                finally {
-                	input.nextLine();
                 }
             }
 
@@ -390,7 +384,7 @@ public class FinalProject {
             file.println("\nStudents Members (sorted by descending GPA)");
             file.println("----------------------------------------");
 
-            sortList.sort(Comparator.comparingDouble(Student::getGpa));
+            sortList.sort(Comparator.comparingDouble(Student::getGpa).reversed());
             for (Student s: sortList) {
                 file.println("\t" + listedObject++ + ". " + s.getName());
                 file.println("\tID: " + s.getId());
@@ -402,7 +396,7 @@ public class FinalProject {
             file.println("\nStudents Members (sorted by descending name)");
             file.println("----------------------------------------");
 
-            sortList.sort(Comparator.comparing(Student::getName).reversed());
+            sortList.sort(Comparator.comparing(Student::getName));
             for (Student s: sortList) {
                 file.println("\t" + listedObject++ + ". " + s.getName());
                 file.println("\tID: " + s.getId());
@@ -492,7 +486,7 @@ class Student extends Person {
         double total = (getCreditHours() * 236.45) + 52;
         double discount = (getCreditHours() * 236.45 * .25);
         double totalDiscount = total - discount;
-        
+
         System.out.println("---------------------------------------------------------------------------");
         System.out.println(getName() + "\t" + getId());
         System.out.println("Credit hours: " + getCreditHours() + " ($236.45/credit hour)");
@@ -559,7 +553,7 @@ class Faculty extends Employee {
         rank = "Rank not found";
     }
 
-    public Faculty(String name, String id, String department, String rank) {
+    public Faculty(String name, String id, String rank, String department) {
         super(name, id, department);
         setRank(rank);
     }
