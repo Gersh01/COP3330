@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 public class FinalProject {
     public static void main(String[] args) throws FileNotFoundException {
+    	System.out.println("\n\t\t\t\t\t\t\tWelcome to my Personal Management Program\n");
         int option;
         String tmpId = null;
         Scanner input = new Scanner(System.in);
@@ -31,7 +32,7 @@ public class FinalProject {
                 input.nextLine();
 
             } catch (Exception e) {
-                System.out.println("You entered an invalid input - try again");
+                System.out.println("\n\nInvalid entry - try again\n\n");
                 input.nextLine();
                 continue;
             }
@@ -40,61 +41,59 @@ public class FinalProject {
             switch (option) {
                 case 1: //Add faculty
                     System.out.println("\nEnter the faculty info:");
-                    System.out.println("---------------------------------------------------------------------------");
                     pList.add ( new Faculty //runs through each method collecting input then adds to list
                         (
-                            inputName(input),
+                            inputName(input,1),
                             inputID(input, pList),
                             inputRank(input),
                             inputDepartment(input)
                         )
                     );
-                    System.out.println("\nFaculty member added!");
+                    System.out.println("\nFaculty added!\n");
                     break;
                 case 2: //Add student
                     System.out.println("\nEnter the student info:");
-                    System.out.println("---------------------------------------------------------------------------");
+                    
                     pList.add ( new Student
                         (
-                            inputName(input),
+                            inputName(input,2),
                             inputID(input, pList),
                             inputGPA(input),
                             inputCrdHrs(input)
                         )
                     );
-                    System.out.println("\nStudent member added!");
+                    System.out.println("\nStudent added!\n");
                     break;
                 case 3: //Print invoice
-                    System.out.print("Enter the Student's id: ");
+                    System.out.print("\n\tEnter the Student's id: ");
                     if(!printObject(input, pList)) //if function fails - student not found
-                        System.out.println("\nNo Student matched!");
+                        System.out.println("\n\tNo Student matched!\n\n");
                     break;
                 case 4: //Print faculty
-                    System.out.print("Enter the Faculty's id: ");
+                    System.out.print("\n\tEnter the Faculty's id: ");
                     if(!printObject(input, pList))
-                        System.out.println("\nNo Faculty member matched!");
+                        System.out.println("\n\tNo Faculty member matched!\n\n");
                     break;
                 case 5: //Add staff
                     System.out.println("\nEnter the staff info: ");
-                    System.out.println("---------------------------------------------------------------------------");
                     pList.add ( new Staff
                         (
-                            inputName(input),
+                            inputName(input, 5),
                             inputID(input, pList),
                             inputDepartment(input),
                             inputStatus(input)
                         )
                     );
-                    System.out.println("\nStaff member added!");
+                    System.out.println("\nStaff member added!\n");
                     break;
                 case 6: //Print staff
-                    System.out.print("Enter the Staff's id: ");
+                    System.out.print("\n\tEnter the Staff's id: ");
                     if(!printObject(input, pList))
-                        System.out.println("\nNo Staff member matched!");
+                        System.out.println("\n\tNo Staff member matched!\n\n");
                     break;
                 case 7: //Delete person
                     boolean exist = false;
-                    System.out.print("Enter the id of the person to delete: ");
+                    System.out.print("\n\tEnter the id of the person to delete: ");
                     tmpId = input.nextLine(); //grab the ID to match
                     for(Person p: pList) { //find the person with matching ID
                         if(p.getId().compareToIgnoreCase(tmpId) == 0) {
@@ -105,14 +104,14 @@ public class FinalProject {
                         }
                     }
                     if(!exist) //not exists = no person
-                        System.out.println("\nSorry no such person exists");
+                        System.out.println("\n\tSorry no such person exists.\n\n");
                     break;
                 case 8:
                     sentinel = false; //break the loop after switch
                     exitProtocol(input, pList); //series of routines to properly exit program
                     break;
                 default:
-                    System.out.println("You entered an invalid input - try again");
+                    System.out.println("\nInvalid entry - try again\n");
                     break;
             }
         }
@@ -120,7 +119,6 @@ public class FinalProject {
 
     //method to be called every cycle of instruction
     public static void printMenu() {
-        System.out.println("---------------------------------------------------------------------------");
         System.out.println("Choose one of the options:");
         System.out.println("1 - Enter the information of a faculty");
         System.out.println("2 - Enter the information of a student");
@@ -130,8 +128,7 @@ public class FinalProject {
         System.out.println("6 - Print the information of a staff member");
         System.out.println("7 - Delete a person");
         System.out.println("8 - Exit Program");
-        System.out.println("---------------------------------------------------------------------------");
-        System.out.print("Enter your selection: ");
+        System.out.print("\n\tEnter your selection: ");
     }
 
     //checks if the ID is in correct format
@@ -151,11 +148,22 @@ public class FinalProject {
     }
 
     //Input methods with exception handling - declutter the switch in main method
-    public static String inputName(Scanner input) {
+    public static String inputName(Scanner input, int val) {
         String fullName = null;
         while (true) {
             try {
-                System.out.print("Name of the person: ");
+            	if(val == 1) {
+            		System.out.print("\tName of the faculty: ");
+            	}
+            	
+            	else if(val == 2) {
+            		System.out.print("\tName of Student: ");
+            	}
+            	
+            	else if(val == 5) {
+            		System.out.print("\tName of the staff member: ");
+            	}
+            		
                 fullName = input.nextLine();
 
                 for (int i = 0; i < fullName.length(); i++)
@@ -163,7 +171,7 @@ public class FinalProject {
                         throw new Exception();
                 break;
             } catch (Exception e) {
-                System.out.println(fullName + " is an invalid input - try again");
+                System.out.println("\n\tInvalid entry - try again\n");
                 continue;
             }
         }
@@ -173,7 +181,7 @@ public class FinalProject {
         String id = null;
         while (true) {
             try {
-                System.out.print("ID: ");
+                System.out.print("\tID: ");
                 id = input.nextLine();
 
                 //using helper function to check formatting of ID
@@ -187,7 +195,7 @@ public class FinalProject {
                 System.out.println(id + " is already assigned - try again");
                 continue;
             } catch (Exception e) {
-                System.out.println(id + " is an invalid input - try again");
+                System.out.println("\n\tInvalid ID format. Must be LetterLetterDigitDigitDigitDigit\n");
                 continue;
             }
         }
@@ -198,7 +206,7 @@ public class FinalProject {
         String department = null;
         while (true) {
             try {
-                System.out.print("Department: ");
+                System.out.print("\tDepartment: ");
                 department = input.nextLine();
                 if //must be one of the three departments
                 (
@@ -209,7 +217,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch (Exception e) {
-                System.out.println(department + " is an invalid input - try again");
+                System.out.println("\n\t" + '"' + department + '"' + " is invalid\n");
                 continue;
             }
         }
@@ -220,7 +228,7 @@ public class FinalProject {
         String rank = null;
         while (true) {
             try {
-                System.out.print("Rank: ");
+                System.out.print("\tRank: ");
                 rank = input.nextLine();
                 if //must be one of the two ranks
                 (
@@ -230,7 +238,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch (Exception e) {
-                System.out.println(rank + " is an invalid input - try again");
+                System.out.println("\n\t" + '"' + rank + '"' + " is invalid\n");
                 continue;
             }
         }
@@ -240,7 +248,7 @@ public class FinalProject {
         String status = null;
         while(true) {
             try {
-                System.out.print("Status - Enter P for part time, F for full time: ");
+                System.out.print("\tStatus - Enter P for part time, F for full time: ");
                 status = input.nextLine();
                 if //must be either p or f
                 (
@@ -250,7 +258,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch (Exception e) {
-                System.out.println(status + " is an invalid input - try again");
+                System.out.println("\n\t" + '"' + status + '"' + " is invalid\n");
                 continue;
             }
         }
@@ -260,14 +268,14 @@ public class FinalProject {
         double gpa = 0;
         while(true) {
             try {
-                System.out.print("Enter GPA between 0.00 - 4.00: ");
+                System.out.print("\tGPA: ");
                 gpa = input.nextDouble();
                 if(gpa < 0 || gpa > 4.00) //must be within gpa range
                     throw new Exception();
                 else
                     break;
             } catch(Exception e) {
-                System.out.println("You have entered an invalid input - try again");
+                System.out.println("\n\tInvalid entry - try again\n");
                 continue;
             }
             finally {
@@ -280,13 +288,13 @@ public class FinalProject {
         int creditHours = 0;
         while(true) {
             try {
-                System.out.print("Enter credit hours taken - must be greater than 0: ");
+                System.out.print("\tCredit Hours: ");
                 creditHours = input.nextInt();
 
                 if(creditHours < 0) throw new Exception(); //input cant be a negative number
                 else break;
             } catch(Exception e) {
-                System.out.println("You have entered an invalid input - try again");
+                System.out.println("\n\tInvalid entry - try again\n");
                 continue;
             }
             finally {
@@ -323,7 +331,7 @@ public class FinalProject {
                     break;
                 else throw new Exception();
             } catch(Exception e) {
-                System.out.println(reportOption + " is an invalid input - try again");
+                System.out.println("\nInvalid entry - try again\n");
                 continue;
             }
         }
@@ -338,7 +346,7 @@ public class FinalProject {
                         break;
                     else throw new Exception();
                 } catch (Exception e) {
-                    System.out.println("You have entered an invalid input - try again");
+                    System.out.println("\nInvalid entry - try again\n");
                     continue;
                 }
                 finally {
@@ -497,7 +505,8 @@ class Student extends Person {
         double total = (getCreditHours() * 236.45) + 52;
         double discount = (getCreditHours() * 236.45 * .25);
         double totalDiscount = total - discount;
-
+        
+        System.out.println("\n\nHere is the tuition invoice for " + getName() + ":\n\n");
         System.out.println("---------------------------------------------------------------------------");
         System.out.println(getName() + "\t" + getId());
         System.out.println("Credit hours: " + getCreditHours() + " ($236.45/credit hour)");
@@ -510,6 +519,7 @@ class Student extends Person {
         else {
             System.out.println("Total payment (after discount): $" + String.format("%.2f", total) + "\t" + "(0$ discount applied)");
         }
+        System.out.println("---------------------------------------------------------------------------\n\n");
     }
 }
 
@@ -577,9 +587,10 @@ class Faculty extends Employee {
     //print version faculty
     @Override
     public void print() {
-        System.out.println("---------------------------------------------------------------------------");
+        System.out.println("\n\n---------------------------------------------------------------------------");
         System.out.println(getName() + "\t\t" + getId());
         System.out.println(getDepartment() + " Department, " + getRank());
+        System.out.println("---------------------------------------------------------------------------\n\n");
     }
 }
 
@@ -614,9 +625,10 @@ class Staff extends Employee {
     //print version staff
     @Override
     public void print() {
-        System.out.println("---------------------------------------------------------------------------");
+        System.out.println("\n\n---------------------------------------------------------------------------");
         System.out.println(getName() + "\t\t" + getId());
         System.out.println(getDepartment() + " Department, " + getStatus());
+        System.out.println("---------------------------------------------------------------------------\n\n");
 
     }
 }
