@@ -9,7 +9,8 @@ All of my completed assignments for my classes during the fall 2023 term.
 ### 3. [Assignment Three](/COP3330/Unit5_HW3.java)
 ### 4. [Assignment Four](/COP3330/Unit6_HW4.java)
 ### 5. [Assignment Five](/COP3330/Unit7_HW5.java)
-### [FINAL PROJECT - WIP](/COP3330/FinalProject.java)
+### 6. [Assignment Six](/COP3330/Unit9_HW6.java)
+### 7. [Final Project](/COP3330/FinalProject.java)
 ---
 
 # COP3502C
