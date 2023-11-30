@@ -105,16 +105,25 @@ int instruction_decode(unsigned op, struct_controls* controls)
 
 /* Read Register */
 /* 5 Points */
-void read_register(unsigned r1, unsigned r2, unsigned* Reg, unsigned* data1, unsigned* data2)
+void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-
+    *data1 = Reg[r1];
+    *data2 = Reg[r2]; 
 }
 
 /* Sign Extend */
 /* 10 Points */
-void sign_extend(unsigned offset, unsigned* extended_value)
+void sign_extend(unsigned offset,unsigned *extended_value)
 {
-	  extended_value = offset << 16;
+    unsigned signbit = offset >> 15;
+    if (signbit == 0) {
+        *extended_value = 0b00000000000000000000000000000000 + offset;
+    }
+    
+    else {
+        *extended_value = 0b11111111111111110000000000000000 + offset;
+    }
+    
 }
 
 /* ALU operations */
