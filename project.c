@@ -114,91 +114,91 @@ int instruction_decode(unsigned op, struct_controls* controls)
           	break;
         case 2: //j-type
           	controls->RegDst = 0;
-			controls->Jump = 1;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 0;
-			controls->MemWrite = 0;
-			controls->ALUSrc = 0;
-			controls->RegWrite = 0;
-      	    break;
+		controls->Jump = 1;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 0;
+		controls->MemWrite = 0;
+		controls->ALUSrc = 0;
+		controls->RegWrite = 0;
+      	    	break;
         case 4: //beq
           	controls->RegDst = 2;
-			controls->Jump = 0;
-			controls->Branch = 1;
-			controls->MemRead = 0;
-			controls->MemtoReg = 2;
-			controls->ALUOp = 7; //subtract
-			controls->MemWrite = 0;
-			controls->ALUSrc = 0;
-			controls->RegWrite = 0;  
+		controls->Jump = 0;
+		controls->Branch = 1;
+		controls->MemRead = 0;
+		controls->MemtoReg = 2;
+		controls->ALUOp = 7; //subtract
+		controls->MemWrite = 0;
+		controls->ALUSrc = 0;
+		controls->RegWrite = 0;  
           	break;
         case 8: //addi
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 110; //add
-			controls->MemWrite = 0;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 1;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 110; //add
+		controls->MemWrite = 0;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 1;
           	break;
         case 10: //slti
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 010;
-			controls->MemWrite = 0;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 0;
-      	    break;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 010;
+		controls->MemWrite = 0;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 0;
+      		break;
         case 11: //sltiu
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 011;
-			controls->MemWrite = 0;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 0;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 011;
+		controls->MemWrite = 0;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 0;
           	break;
         case 15: //lui
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 1;
-			controls->ALUOp = 110;
-			controls->MemWrite = 0;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 0;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 1;
+		controls->ALUOp = 110;
+		controls->MemWrite = 0;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 0;
           	break;
         case 35: //lw
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 1;
-			controls->MemtoReg = 1;
-			controls->ALUOp = 000; //add
-			controls->MemWrite = 0;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 1;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 1;
+		controls->MemtoReg = 1;
+		controls->ALUOp = 000; //add
+		controls->MemWrite = 0;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 1;
           	break;
         case 43: //sw
           	controls->RegDst = 0;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 000; //add
-			controls->MemWrite = 1;
-			controls->ALUSrc = 1;
-			controls->RegWrite = 0;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 000; //add
+		controls->MemWrite = 1;
+		controls->ALUSrc = 1;
+		controls->RegWrite = 0;
           	break;
         default:
           return 1;
