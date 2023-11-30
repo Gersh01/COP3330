@@ -107,7 +107,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 0;
-		controls->ALUOp = 111; //depends on funct
+		controls->ALUOp = 7; //depends on funct
 		controls->MemWrite = 0;
 		controls->ALUSrc = 0;
 		controls->RegWrite = 1;
@@ -129,7 +129,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 1;
 		controls->MemRead = 0;
 		controls->MemtoReg = 2;
-		controls->ALUOp = 7; //subtract
+		controls->ALUOp = 1; //subtract
 		controls->MemWrite = 0;
 		controls->ALUSrc = 0;
 		controls->RegWrite = 0;  
@@ -140,7 +140,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 0;
-		controls->ALUOp = 110; //add
+		controls->ALUOp = 0; //add
 		controls->MemWrite = 0;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 1;
@@ -151,7 +151,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 0;
-		controls->ALUOp = 010;
+		controls->ALUOp = 2;
 		controls->MemWrite = 0;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 0;
@@ -162,7 +162,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 0;
-		controls->ALUOp = 011;
+		controls->ALUOp = 3;
 		controls->MemWrite = 0;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 0;
@@ -173,7 +173,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 1;
-		controls->ALUOp = 110;
+		controls->ALUOp = 6;
 		controls->MemWrite = 0;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 0;
@@ -184,7 +184,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 1;
 		controls->MemtoReg = 1;
-		controls->ALUOp = 000; //add
+		controls->ALUOp = 0; //add
 		controls->MemWrite = 0;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 1;
@@ -195,7 +195,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->Branch = 0;
 		controls->MemRead = 0;
 		controls->MemtoReg = 0;
-		controls->ALUOp = 000; //add
+		controls->ALUOp = 0; //add
 		controls->MemWrite = 1;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 0;
