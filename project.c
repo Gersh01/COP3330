@@ -10,10 +10,16 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
-{
-    *instruction = Mem[PC >> 2];
+{   
+    //(sizeof(Mem) < (65536 >> 2)
+    if(PC % 4 == 0) {
+        *instruction = Mem[PC >> 2];
+        return 0;
+    }
+    else {
+        return 1;
+    }
     
-    return 0;
 }
 
 /* instruction partition */
@@ -58,7 +64,7 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-
+    extended_value = offset << 16;
 }
 
 /* ALU operations */
