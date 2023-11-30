@@ -103,14 +103,14 @@ int instruction_decode(unsigned op, struct_controls* controls)
 	switch(op) {
         case 0: //r-type: add, subtract, and, xor, slt, and sltu
         	controls->RegDst = 1;
-			controls->Jump = 0;
-			controls->Branch = 0;
-			controls->MemRead = 0;
-			controls->MemtoReg = 0;
-			controls->ALUOp = 111; //depends on funct
-			controls->MemWrite = 0;
-			controls->ALUSrc = 0;
-			controls->RegWrite = 1;
+		controls->Jump = 0;
+		controls->Branch = 0;
+		controls->MemRead = 0;
+		controls->MemtoReg = 0;
+		controls->ALUOp = 111; //depends on funct
+		controls->MemWrite = 0;
+		controls->ALUSrc = 0;
+		controls->RegWrite = 1;
           	break;
         case 2: //j-type
           	controls->RegDst = 0;
