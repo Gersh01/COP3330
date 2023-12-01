@@ -239,17 +239,15 @@ int ALU_operations(unsigned data1, unsigned data2, unsigned extended_value, unsi
 			default:
 				return 1;
 		}
-}
+	}
 
-if (ALUSrc == 1) // i type uses extended value
-ALU(data1, extended_value, ALUOp, ALUresult, Zero);
-else //r-type uses registers
-ALU(data1,data2,ALUOp,ALUresult,Zero);
+	if (ALUSrc == 1) // i type uses extended value
+		ALU(data1, extended_value, ALUOp, ALUresult, Zero);
+	else //r-type uses registers
+		ALU(data1,data2,ALUOp,ALUresult,Zero);
 
-//If overflows, then it halts and return 1
-
-
-return 0;
+	//If overflows, then it halts and return 1
+	return 0;
 }
 
 /* Read / Write Memory */
