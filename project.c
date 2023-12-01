@@ -57,25 +57,26 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 
 /* instruction partition */
 /* 10 Points */
-void instruction_partition(unsigned instruction, unsigned* op, unsigned* r1, unsigned* r2, unsigned* r3, unsigned* funct, unsigned* offset, unsigned* jsec)
+void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-   *op = (instruction & 0xFC000000) >> 26;
+    *op = (instruction & 0xFC000000) >> 26;
     
     if(!(*op ^ 0)) { //r-type
         *r1 = (instruction & 0x03E00000) >> 21;
         *r2 = (instruction & 0x001F0000) >> 16;
-        *r3 = (instruction & 0x00003800) >> 11;
+        *r3 = (instruction & 0x0000F800) >> 11;
         *offset = (instruction & 0x000007B0) >> 6;
         *funct = (instruction & 0x0000003F); 
     }
-    else if(*op < 8) { //j-type
+    else if(*op == 2) { //j-type
         *jsec = (instruction & 0x03FFFFFF);
     }
     else { //i-type
         *r1 = (instruction & 0x03E00000) >> 21;
-        *r2 = (instruction & 0x00180000) >> 16;
+        *r2 = (instruction & 0x001F0000) >> 16;
         *offset = (instruction & 0x0000FFFF);
     }
+    
 }
 
 /* instruction decode */
@@ -213,40 +214,42 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 
 /* ALU operations */
 /* 10 Points */
-int ALU_operations(unsigned data1, unsigned data2, unsigned extended_value, unsigned funct, char ALUOp, char ALUSrc, unsigned* ALUresult, char* Zero)
-{
-  	if(ALUOp == 7) {
-		switch(funct) {
-			case 32: //add
-				ALUOp = 0;
-				break;
-			case 34: //subtract
-				ALUOp = 1;
-				break;
-			case 36: //and
-				ALUOp = 4;
-				break;
-			case 38: //xor
-				ALUOp = 5;
-				break;
-			case 42: //slt
-				ALUOp = 2;
-				break;
-			case 43: //sltu
-				ALUOp = 3;
-				break;
-			default:
-				return 1;
-		}
-	}
+int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
+{    
+    if(ALUOp == 7) {
+      switch(funct) {
+        case 32: //add
+          ALUOp = 0;
+          break;
+        case 34: //subtract
+          ALUOp = 1;
+          break;
+        case 36: //and
+          ALUOp = 4;
+          break;
+        case 38: //xor
+          ALUOp = 5;
+          break;
+        case 42: //slt
+          ALUOp = 2;
+          break;
+        case 43: //sltu
+          ALUOp = 3;
+          break;
+        default:
+          return 1;
+      }
+    }
+    
+	  if (ALUSrc == 1) // i type uses extended value
+		  ALU(data1, extended_value, ALUOp, ALUresult, Zero);
+	  else //r-type uses registers
+		  ALU(data1,data2,ALUOp,ALUresult,Zero);
+    
+	  //If overflows, then it halts and return 1
+    
 
-	if (ALUSrc == 1) // i type uses extended value
-		ALU(data1, extended_value, ALUOp, ALUresult, Zero);
-	else //r-type uses registers
-		ALU(data1,data2,ALUOp,ALUresult,Zero);
-
-	//If overflows, then it halts and return 1
-	return 0;
+	  return 0;
 }
 
 /* Read / Write Memory */
@@ -281,11 +284,14 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 /* 10 Points */
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
-    if(RegWrite == 1 && MemtoReg == 1) { //bring data from memory
-        *Reg[r3] = memdata;
+    if(RegWrite == 1 && MemtoReg == 1 && RegDst == 0) { //bring data from memory - lw
+        Reg[r2] = memdata;
     }
-    else if (RegWrite == 1 && MemtoReg == 0) { //bring data from aluresult
-        *Reg[r2] = ALUresult;
+    else if (RegWrite == 1 && MemtoReg == 0 && RegDst == 0) { //bring data from aluresult into r2
+        Reg[r2] = ALUresult;
+    }
+    else if(RegWrite == 1 && MemtoReg == 0 && RegDst == 1) { //bring data from aluresult into r3
+        Reg[r3] = ALUresult;
     }
 }
 
