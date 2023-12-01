@@ -4,58 +4,41 @@
 /* 10 Points */
 void ALU(unsigned A, unsigned B, char ALUControl, unsigned* ALUresult, char* Zero)
 {
-	// should i initizlized char* Zero to "0"
+	    // should i initizlized char* Zero to "0"
 
-
-	if (strcmp("000", ALUControl) == 0) {// addition or don't care
+	if (ALUControl == 0) {// addition or don't care
 		*ALUresult = A + B;
 	}
-
-	else if (strcmp("001", ALUControl) == 0) {// subtraction
+	else if (ALUControl == 1) {// subtraction
 		*ALUresult = A - B;
+		if(ALUresult == 0) *Zero = 1;
 	}
-	else if (strcmp("010", ALUControl) == 0) {// set on less than
-		if (A < B) {
-			ALUresult = 1;
+	else if (ALUControl == 2) {// set on less than
+		if (A < B) *ALUresult = 1;	
+		else {
+			*ALUresult = 0;
+			*Zero = 1;
 		}
-		else
-			ALUresult = 0;
 	}
-	else if (strcmp("011", ALUControl) == 0) {// set on less than unsigned
-		
+	else if (ALUControl == 3) {// set on less than unsigned
+	
 	}
-
-	else if (strcmp("100", ALUControl) == 0) {// AND operation
+	else if (ALUControl == 4) {// AND operation
 		if (A == B)
-			ALUresult = 1;
-		else
-			ALUresult = 0;
+			*ALUresult = 1;
+		else {
+			*ALUresult = 0;
+			*Zero = 1;
+		}
 	}
-	else if (strcmp("101", ALUControl) == 0) {	//XOR
+	else if (ALUControl == 5) {	//XOR
 		if (A != B)
-			ALUresult = 1;
-		else
-			ALUresult = 0;
+			*ALUresult = 1;
+		else {
+			*ALUresult = 0;
+			*Zero = 1;
+		}
 	}
-	else if (strcmp("110", ALUControl) == 0) {// shift left 16?
-		ALUresult = B << 16;
-	}
-	else if (strcmp("111", ALUControl) == 0) {// R-type instruction
-
-		// either A or B
-
-		ALUresult = A;
-
-
-
-	}
-
-	if (ALUresult == 0) {
-		strcpy(Zero, "1");
-	}
-	else
-		strcpy(Zero, "0");
-
 }
 
 /* instruction fetch */
@@ -233,21 +216,40 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 /* 10 Points */
 int ALU_operations(unsigned data1, unsigned data2, unsigned extended_value, unsigned funct, char ALUOp, char ALUSrc, unsigned* ALUresult, char* Zero)
 {
+  	if(ALUOp == 7) {
+		switch(funct) {
+			case 32: //add
+				ALUOp = 0;
+				break;
+			case 34: //subtract
+				ALUOp = 1;
+				break;
+			case 36: //and
+				ALUOp = 4;
+				break;
+			case 38: //xor
+				ALUOp = 5;
+				break;
+			case 42: //slt
+				ALUOp = 2;
+				break;
+			case 43: //sltu
+				ALUOp = 3;
+				break;
+			default:
+				return 1;
+		}
+}
 
-	// i type uses extended value
-	if (ALUSrc == 0) {
-		ALU(data1, extended_value, ALUOp, ALUresult, Zero);
-	}
-	else if (ALUOp == 111) {
+if (ALUSrc == 1) // i type uses extended value
+ALU(data1, extended_value, ALUOp, ALUresult, Zero);
+else //r-type uses registers
+ALU(data1,data2,ALUOp,ALUresult,Zero);
 
-	}
-	else
-		ALU(data1,data2,ALUOp,ALUresult,Zero);
-
-	//If overflows, then it halts and return 1
+//If overflows, then it halts and return 1
 
 
-	return 0;
+return 0;
 }
 
 /* Read / Write Memory */
