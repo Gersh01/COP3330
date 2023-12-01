@@ -1,5 +1,5 @@
 #include "spimcore.h"
-
+#define MEMSIZE (65536 >> 2)
 /* ALU */
 /* 10 Points */
 void ALU(unsigned A, unsigned B, char ALUControl, unsigned* ALUresult, char* Zero)
@@ -45,8 +45,7 @@ void ALU(unsigned A, unsigned B, char ALUControl, unsigned* ALUresult, char* Zer
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {   
-    //(sizeof(Mem) < (65536 >> 2)
-    if(PC % 4 == 0) {
+    if(PC % 4 == 0 && Mem[PC >> 2] < MEMSIZE) {
         *instruction = Mem[PC >> 2];
         return 0;
     }
@@ -182,6 +181,7 @@ int instruction_decode(unsigned op, struct_controls* controls)
 		controls->MemWrite = 1;
 		controls->ALUSrc = 1;
 		controls->RegWrite = 0;
+
           	break;
         default:
           return 1;
@@ -193,8 +193,9 @@ int instruction_decode(unsigned op, struct_controls* controls)
 /* 5 Points */
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-    *data1 = Reg[r1];
-    *data2 = Reg[r2]; 
+
+    *data1 = *Reg[r1];
+    *data2 = *Reg[r2]; 
 }
 
 /* Sign Extend */
@@ -261,12 +262,34 @@ int rw_memory(unsigned ALUresult, unsigned data2, char MemWrite, char MemRead, u
 /* 10 Points */
 void write_register(unsigned r2, unsigned r3, unsigned memdata, unsigned ALUresult, char RegWrite, char RegDst, char MemtoReg, unsigned* Reg)
 {
-
+    if(RegWrite == 1 && MemtoReg == 1) { //bring data from memory
+        *Reg[r3] = memdata;
+    }
+    else if (RegWrite == 1 && MemtoReg == 0) { //bring data from aluresult
+        *Reg[r2] = ALUresult;
+    }
 }
 
 /* PC update */
 /* 10 Points */
 void PC_update(unsigned jsec, unsigned extended_value, char Branch, char Jump, char Zero, unsigned* PC)
 {
-
+    if (Jump == 0 && Branch == 0) {
+        *PC = *PC + 4;
+    }
+    else if (Jump == 1) {
+        *PC = (*PC >> 27) + (jsec << 2);
+      
+    }
+    else if (Branch == 1 && Zero == 1) {
+        if (extended_value >> 31 == 0) {
+            *PC = *PC + (extended_value - 0b00000000000000000000000000000000)  * 4;  
+        }
+        else if (extended_value >> 31 == 1) {
+            *PC = *PC + (extended_value - 0b11111111111111110000000000000000)  * 4;
+        }
+         
+    }
+    
+    
 }
