@@ -6,29 +6,28 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
     // should i initizlized char* Zero to "0"
 
-  	if (ALUControl == 0) {// addition or don't care
+  	if (ALUControl == 0) { //addition or don't care
   		*ALUresult = A + B;
   	}
-  
-  	else if (ALUControl == 1) {// subtraction
+  	else if (ALUControl == 1) { //subtraction
   		*ALUresult = A - B;
       if(ALUresult == 0) *Zero = 1;
   	}
-  	else if (ALUControl == 2) {// set on less than
-  		if (A < B) *ALUresult = 1;	
+  	else if (ALUControl == 2) { //set on less than
+  		if ((short)A < B) *ALUresult = 1;	
   		else {
         *ALUresult = 0;
         *Zero = 1;
       }
   	}
-  	else if (ALUControl == 3) {// set on less than unsigned
+  	else if (ALUControl == 3) { //set on less than unsigned
       if (A < B) *ALUresult = 1;	
   		else {
         *ALUresult = 0;
         *Zero = 1;
       }
   	}
-  	else if (ALUControl == 4) {// AND operation
+  	else if (ALUControl == 4) { //AND operation
   		if (A == B)
   			*ALUresult = 1;
   		else {
@@ -37,22 +36,27 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
       }
   	}
   	else if (ALUControl == 5) {	//XOR
-  		if (A != B)
-  			*ALUresult = 1;
-  		else {
+			*ALUresult = A ^ B;
+  		
+      if(*ALUresult == 0) {
   			*ALUresult = 0;
-        *Zero = 1;
+        *Zero = 1;  
       }
   	}
+    else if(ALUControl == 6) { //shift
+        *ALUresult = (B << 16);
+    }
 }
 
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
-{
+{    
     //(sizeof(Mem) < (65536 >> 2)
     if(PC % 4 == 0) {
         *instruction = Mem[PC >> 2];
+        
+        if(*instruction & 0xdeadbeaf == 1) return 1;
         return 0;
     }
     else {
@@ -147,7 +151,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
     			controls->ALUOp = 2;
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
-    			controls->RegWrite = 0;
+    			controls->RegWrite = 1;
           
           break;
         case 11: //sltiu
@@ -159,19 +163,19 @@ int instruction_decode(unsigned op,struct_controls *controls)
     			controls->ALUOp = 3;
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
-    			controls->RegWrite = 0;
+    			controls->RegWrite = 1;
           
           break;
         case 15: //lui
           controls->RegDst = 0;
 		    	controls->Jump = 0;
 			    controls->Branch = 0;
-			    controls->MemRead = 0;
-			    controls->MemtoReg = 1;
+			    controls->MemRead = 2;
+			    controls->MemtoReg = 0;
     			controls->ALUOp = 6;
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
-    			controls->RegWrite = 0;
+    			controls->RegWrite = 1;
           
           break;
         case 35: //lw
@@ -272,7 +276,6 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {  
-    printf("%d\n", ALUresult);
     if (MemWrite == 1) { //write to memory
         if ((ALUresult % 4) != 0) {
             return 1;
@@ -310,12 +313,13 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
     else if(RegWrite == 1 && MemtoReg == 0 && RegDst == 1) { //bring data from aluresult into r3
         Reg[r3] = ALUresult;
     }
+  
 }
 
 /* PC update */
 /* 10 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
-{
+{  
     if (Jump == 0 && Branch == 0) {
         *PC = *PC + 4;
     }
@@ -325,10 +329,10 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
     }
     else if (Branch == 1 && Zero == 1) {
         if (extended_value >> 31 == 0) {
-            *PC = *PC + (extended_value - 0b00000000000000000000000000000000)  * 4;  
+            *PC = *PC + ((extended_value - 0b00000000000000000000000000000000) << 2);  
         }
         else if (extended_value >> 31 == 1) {
-            *PC = *PC + (extended_value - 0b11111111111111110000000000000000)  * 4;
+            *PC = *PC + ((extended_value - 0b11111111111111110000000000000000) << 2);
         }
          
     }
