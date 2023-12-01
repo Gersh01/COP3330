@@ -1,51 +1,57 @@
 #include "spimcore.h"
-#define MEMSIZE (65536 >> 2)
+
 /* ALU */
 /* 10 Points */
-void ALU(unsigned A, unsigned B, char ALUControl, unsigned* ALUresult, char* Zero)
+void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
-	    // should i initizlized char* Zero to "0"
+    // should i initizlized char* Zero to "0"
 
-	if (ALUControl == 0) {// addition or don't care
-		*ALUresult = A + B;
-	}
-	else if (ALUControl == 1) {// subtraction
-		*ALUresult = A - B;
-		if(ALUresult == 0) *Zero = 1;
-	}
-	else if (ALUControl == 2) {// set on less than
-		if (A < B) *ALUresult = 1;	
-		else {
-			*ALUresult = 0;
-			*Zero = 1;
-		}
-	}
-	else if (ALUControl == 3) {// set on less than unsigned
-	
-	}
-	else if (ALUControl == 4) {// AND operation
-		if (A == B)
-			*ALUresult = 1;
-		else {
-			*ALUresult = 0;
-			*Zero = 1;
-		}
-	}
-	else if (ALUControl == 5) {	//XOR
-		if (A != B)
-			*ALUresult = 1;
-		else {
-			*ALUresult = 0;
-			*Zero = 1;
-		}
-	}
+  	if (ALUControl == 0) {// addition or don't care
+  		*ALUresult = A + B;
+  	}
+  
+  	else if (ALUControl == 1) {// subtraction
+  		*ALUresult = A - B;
+      if(ALUresult == 0) *Zero = 1;
+  	}
+  	else if (ALUControl == 2) {// set on less than
+  		if (A < B) *ALUresult = 1;	
+  		else {
+        *ALUresult = 0;
+        *Zero = 1;
+      }
+  	}
+  	else if (ALUControl == 3) {// set on less than unsigned
+      if (A < B) *ALUresult = 1;	
+  		else {
+        *ALUresult = 0;
+        *Zero = 1;
+      }
+  	}
+  	else if (ALUControl == 4) {// AND operation
+  		if (A == B)
+  			*ALUresult = 1;
+  		else {
+  			*ALUresult = 0;
+        *Zero = 1;
+      }
+  	}
+  	else if (ALUControl == 5) {	//XOR
+  		if (A != B)
+  			*ALUresult = 1;
+  		else {
+  			*ALUresult = 0;
+        *Zero = 1;
+      }
+  	}
 }
 
 /* instruction fetch */
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
-{   
-    if(PC % 4 == 0 && Mem[PC >> 2] < MEMSIZE) {
+{
+    //(sizeof(Mem) < (65536 >> 2)
+    if(PC % 4 == 0) {
         *instruction = Mem[PC >> 2];
         return 0;
     }
@@ -81,120 +87,131 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 
 /* instruction decode */
 /* 15 Points */
-int instruction_decode(unsigned op, struct_controls* controls)
+int instruction_decode(unsigned op,struct_controls *controls)
 {
-	switch(op) {
+    switch(op) {
         case 0: //r-type: add, subtract, and, xor, slt, and sltu
-          	controls->RegDst = 1;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 7; //depends on funct
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 0;
-        		controls->RegWrite = 1;
-         	  break;
+          controls->RegDst = 1;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 0;
+    			controls->ALUOp = 7; //depends on funct
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 0;
+    			controls->RegWrite = 1;
+          
+          break;
         case 2: //j-type
-          	controls->RegDst = 0;
-        		controls->Jump = 1;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 0;
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 0;
-        		controls->RegWrite = 0;
-  	    	  break;
+          controls->RegDst = 2;
+		    	controls->Jump = 1;
+			    controls->Branch = 0;
+			    controls->MemRead = 2;
+			    controls->MemtoReg = 2;
+    			controls->ALUOp = 0;
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 2;
+    			controls->RegWrite = 0;
+          
+          break;
         case 4: //beq
-          	controls->RegDst = 2;
-        		controls->Jump = 0;
-        		controls->Branch = 1;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 2;
-        		controls->ALUOp = 1; //subtract
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 0;
-        		controls->RegWrite = 0;  
-       	    break;
+          controls->RegDst = 2;
+		    	controls->Jump = 0;
+			    controls->Branch = 1;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 2;
+    			controls->ALUOp = 1; //subtract
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 0;
+    			controls->RegWrite = 0;
+          
+          break;
         case 8: //addi
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 0; //add
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 1;
-          	break;
+          controls->RegDst = 0;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 0;
+    			controls->ALUOp = 0; //add
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 1;
+          
+          break;
         case 10: //slti
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 2;
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 0;
-      		  break;
+          controls->RegDst = 0;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 0;
+    			controls->ALUOp = 2;
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 0;
+          
+          break;
         case 11: //sltiu
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 3;
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 0;
-          	break;
+          controls->RegDst = 0;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 0;
+    			controls->ALUOp = 3;
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 0;
+          
+          break;
         case 15: //lui
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 1;
-        		controls->ALUOp = 6;
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 0;
-          	break;
+          controls->RegDst = 0;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 0;
+			    controls->MemtoReg = 1;
+    			controls->ALUOp = 6;
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 0;
+          
+          break;
         case 35: //lw
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 1;
-        		controls->MemtoReg = 1;
-        		controls->ALUOp = 0; //add
-        		controls->MemWrite = 0;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 1;
-          	break;
+          controls->RegDst = 0;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 1;
+			    controls->MemtoReg = 1;
+    			controls->ALUOp = 0; //add
+    			controls->MemWrite = 0;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 1;
+          
+          break;
         case 43: //sw
-          	controls->RegDst = 0;
-        		controls->Jump = 0;
-        		controls->Branch = 0;
-        		controls->MemRead = 0;
-        		controls->MemtoReg = 0;
-        		controls->ALUOp = 0; //add
-        		controls->MemWrite = 1;
-        		controls->ALUSrc = 1;
-        		controls->RegWrite = 0;
-          	break;
+          controls->RegDst = 2;
+		    	controls->Jump = 0;
+			    controls->Branch = 0;
+			    controls->MemRead = 2;
+			    controls->MemtoReg = 2;
+    			controls->ALUOp = 0; //add
+    			controls->MemWrite = 1;
+    			controls->ALUSrc = 1;
+    			controls->RegWrite = 0;
+          
+          break;
         default:
           return 1;
     }
+
     return 0;
+    
 }
 
 /* Read Register */
 /* 5 Points */
 void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigned *data2)
 {
-    *data1 = *Reg[r1];
-    *data2 = *Reg[r2]; 
+    *data1 = Reg[r1];
+    *data2 = Reg[r2]; 
 }
 
 /* Sign Extend */
@@ -209,7 +226,6 @@ void sign_extend(unsigned offset,unsigned *extended_value)
     else {
         *extended_value = 0b11111111111111110000000000000000 + offset;
     }
-    
 }
 
 /* ALU operations */
@@ -255,23 +271,24 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* Read / Write Memory */
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
-{
+{  
+    printf("%d\n", ALUresult);
     if (MemWrite == 1) { //write to memory
-        if (ALUresult % 4) != 0) {
+        if ((ALUresult % 4) != 0) {
             return 1;
         }
         else {
-            *Mem[ALUresult] = data2;
-            return 0
+            Mem[ALUresult >> 2] = data2;
+            return 0;
         }
         
     }
     else if (MemRead == 1) { //read from memory
-        if (ALUresult % 4) != 0) {
+        if ((ALUresult % 4) != 0) {
             return 1;
         }
         else {
-            *memdata = *Mem[ALUresult];
+            *memdata = Mem[ALUresult >> 2];
             return 0;
         }
     }  
@@ -315,6 +332,5 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
         }
          
     }
-    
     
 }
