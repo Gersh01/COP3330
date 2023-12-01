@@ -53,13 +53,17 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {    
     //(sizeof(Mem) < (65536 >> 2)
+    
     if(PC % 4 == 0) {
         *instruction = Mem[PC >> 2];
         
-        if(*instruction & 0xdeadbeaf == 1) return 1;
+        //illegal instructions
+        if((*instruction & 0xdeadbeaf == 1) || (*instruction & 0xbadabeaf == 1) || (*instruction & 0 == 0)) 
+          return 1;
+
         return 0;
     }
-    else {
+    else { //not word aligned
         return 1;
     }
     
@@ -112,7 +116,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 			    controls->Branch = 0;
 			    controls->MemRead = 2;
 			    controls->MemtoReg = 2;
-    			controls->ALUOp = 0;
+    			controls->ALUOp = 0; //dont care
     			controls->MemWrite = 0;
     			controls->ALUSrc = 2;
     			controls->RegWrite = 0;
@@ -148,7 +152,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 			    controls->Branch = 0;
 			    controls->MemRead = 0;
 			    controls->MemtoReg = 0;
-    			controls->ALUOp = 2;
+    			controls->ALUOp = 2; //slt
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
     			controls->RegWrite = 1;
@@ -160,7 +164,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 			    controls->Branch = 0;
 			    controls->MemRead = 0;
 			    controls->MemtoReg = 0;
-    			controls->ALUOp = 3;
+    			controls->ALUOp = 3; //sltu
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
     			controls->RegWrite = 1;
@@ -172,7 +176,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
 			    controls->Branch = 0;
 			    controls->MemRead = 2;
 			    controls->MemtoReg = 0;
-    			controls->ALUOp = 6;
+    			controls->ALUOp = 6; //shift left 16
     			controls->MemWrite = 0;
     			controls->ALUSrc = 1;
     			controls->RegWrite = 1;
@@ -265,9 +269,6 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 		  ALU(data1, extended_value, ALUOp, ALUresult, Zero);
 	  else //r-type uses registers
 		  ALU(data1,data2,ALUOp,ALUresult,Zero);
-    
-	  //If overflows, then it halts and return 1
-    
 
 	  return 0;
 }
@@ -319,22 +320,16 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 /* PC update */
 /* 10 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
-{  
-    if (Jump == 0 && Branch == 0) {
-        *PC = *PC + 4;
-    }
-    else if (Jump == 1) {
+{    
+
+    *PC = *PC + 4;
+
+    if (Jump == 1) {
         *PC = (*PC >> 27) + (jsec << 2);
       
     }
     else if (Branch == 1 && Zero == 1) {
-        if (extended_value >> 31 == 0) {
-            *PC = *PC + ((extended_value - 0b00000000000000000000000000000000) << 2);  
-        }
-        else if (extended_value >> 31 == 1) {
-            *PC = *PC + ((extended_value - 0b11111111111111110000000000000000) << 2);
-        }
-         
+        *PC += (extended_value << 2);
     }
     
 }
