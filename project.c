@@ -54,7 +54,7 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {    
     //(sizeof(Mem) < (65536 >> 2)
     
-    if(PC % 4 == 0) {
+    if(PC % 4 == 0 && Mem[PC >> 2] < MEMSIZE) {
         *instruction = Mem[PC >> 2];
         
         //illegal instructions
