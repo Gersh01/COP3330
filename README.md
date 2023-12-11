@@ -4,7 +4,7 @@ All of my completed assignments for my classes during the fall 2023 term.
 
 # COP3330C
 
-### 1. [Assignment One](/COP3330/Unit1_HW1.java)
+### 1. [Assignment One](/COP3330/Unit1_HW1.java) - 
 ### 2. [Assignment Two](/COP3330/Unit4_HW2.java)
 ### 3. [Assignment Three](/COP3330/Unit5_HW3.java)
 ### 4. [Assignment Four](/COP3330/Unit6_HW4.java)
@@ -26,5 +26,5 @@ All of my completed assignments for my classes during the fall 2023 term.
 <br>
 
 ## Recitation
-### 1. [Recitation Assignment One](/COP3502/RP1/mirror.c)
-### 2. [Recitation Assignment Two](/COP3502/RP2/skyislands.c)
+### 1. [Recitation Assignment One](/COP3502/RP1/mirror.c) - [Kattis Problem: Mirror](https://open.kattis.com/problems/mirror)
+### 2. [Recitation Assignment Two](/COP3502/RP2/skyislands.c) - [Kattis Problem: Sky Islands](https://open.kattis.com/problems/skyislands)
