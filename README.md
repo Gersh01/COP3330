@@ -25,6 +25,6 @@ All of my completed assignments for my classes during the fall 2023 term.
 ### 6. [Assignment Six](/COP3502/P5/loyalty.c)
 <br>
 
-## Recitation -- Released after Spring 2024
+## Recitation
 ### 1. [Recitation Assignment One](/COP3502/RP1/mirror.c) | [Kattis Problem: Mirror](https://open.kattis.com/problems/mirror)
 ### 2. [Recitation Assignment Two](/COP3502/RP2/skyislands.c) | [Kattis Problem: Sky Islands](https://open.kattis.com/problems/skyislands)
