@@ -1,4 +1,4 @@
-All of my completed assignments for my classes during the fall 2023 term. 
+All of my completed assignments for my classes during my time completing my B.S. in Computer Science. 
 
 **Copying from this repository is disrespectful to your learning.** Please try to use these as guides, and if you spot something that could be written better in the code please let me know, I would love to update them!
 
